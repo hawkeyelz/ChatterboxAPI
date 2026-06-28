@@ -1,0 +1,8 @@
+{
+  "NewOldRadioShow": {
+    "voice_folder": "/home/hawkelz/Documents/AI/PipeLine/Inputs/TTSVoices",
+    "voice_cast_profile": "/home/hawkelz/Documents/AI/PipeLine/Inputs/WebSeries/NewOldRadioShow/voice_cast.json",
+    "workspace_folder": "/home/hawkelz/Documents/AI/PipeLine/Outputs/Audio/Workspace/NewOldRadioShow",
+    "output_folder": "/home/hawkelz/Documents/AI/PipeLine/Outputs/Audio"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8001
+  },
+  "settings": {
+    "max_chars_per_chunk": 150,
+    "pause_duration_seconds": 1.0
+  }
+}
