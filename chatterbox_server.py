@@ -30,7 +30,8 @@ class TTSRequest(BaseModel):
     text: str
     voice_filename: str     # e.g., "male_04.wav"
     exaggeration: float = 0.6  
-    cfg_weight: float = 0.5    
+    cfg_weight: float = 0.5 
+    speed_factor: float = 1.0      # 1.0 = normal, 1.3 = faster, 0.75 = slower   
 
 def clean_and_split_text(text, max_chars=150):
     """Splits an individual line into chunks at punctuation boundaries if it exceeds limits."""
@@ -41,6 +42,13 @@ def clean_and_split_text(text, max_chars=150):
         if token:
             chunks.append(token)
     return chunks
+
+def apply_tempo(wav_path, speed_factor):
+    if speed_factor == 1.0:
+        return  # skip processing if no change needed
+    y, sr = librosa.load(wav_path, sr=None, mono=True)
+    y_stretched = librosa.effects.time_stretch(y, rate=speed_factor)
+    sf.write(wav_path, y_stretched, sr)
 
 @app.post("/generate")
 async def generate_audio(payload: TTSRequest):
@@ -95,6 +103,7 @@ async def generate_audio(payload: TTSRequest):
             
         final_wav = torch.cat(combined_wavs, dim=-1)
         ta.save(final_output_path, final_wav, model.sr)
+        apply_tempo(final_output_path, payload.speed_factor)
         
         return {
             "status": "success",
@@ -105,6 +114,7 @@ async def generate_audio(payload: TTSRequest):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
+
 
 if __name__ == "__main__":
     import uvicorn
